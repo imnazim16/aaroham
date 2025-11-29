@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashiana Aaroham</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Premium Selection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-primary': '#ab7f30',    /* VIBRANT RED */
+                        'brand-dark': '#111827',       /* Deep Charcoal/Black */
+                        'brand-accent': '#F9FAFB',     /* Crisp White/Gray Background */
+                        'brand-hover': '#c48d2b',      /* Darker Red for Hover */
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to right bottom, rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.5)), url('images/1.jpg')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom CSS embedded here */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ab7f30; 
+            border-radius: 4px;
+        }
+
+        ::selection {
+            background-color: #ab7f30;
+            color: white;
+        }
+
+        .text-boost-shadow {
+            text-shadow: 0 0 5px rgba(185, 141, 61, 0.5); 
+        }
+
+        /* Gallery Grid Layout (Masonry-like) */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 200px); 
+            gap: 16px;
+        }
+
+        /* Masonry Layout Items */
+        .gallery-item-1 { grid-column: span 2; grid-row: span 2; }
+        .gallery-item-2 { grid-column: span 1; grid-row: span 2; }
+        .gallery-item-3 { grid-column: span 1; grid-row: span 1; }
+        .gallery-item-4 { grid-column: span 1; grid-row: span 1; }
+        .gallery-item-6 { grid-column: span 2; grid-row: span 2; }
+
+        /* Responsive adjustments for Gallery */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .gallery-item-1, .gallery-item-2, .gallery-item-3, 
+            .gallery-item-4, .gallery-item-6 {
+                grid-column: span 1;
+                grid-row: auto;
+                height: 300px; 
+            }
+        }
+
+        /* Location Card Hover Effect */
+        .location-card:hover i {
+            transform: scale(1.2);
+            color: #ab7f30;
+        }
+
+        /* General Modal Animation */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .modal:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        
+        /* Image Modal Specific Styles */
+        .image-modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-700 antialiased bg-brand-accent">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-40 bg-white shadow-md transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- Logo Area (UPDATED to use an image) -->
+            <a href="#" class="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-lg">
+                <img 
+                    class="h-14 w-auto rounded-lg "
+                    src="images/aaroham_logo.png" 
+                    alt="Skyline Heights Logo"
+                    onerror="this.onerror=null; this.src='https://placehold.co/160x40/cccccc/333333?text=Logo+Error';"
+                >
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 font-medium text-sm tracking-wide uppercase text-gray-600">
+                <a href="#overview" class="hover:text-brand-primary transition">Overview</a>
+                <a href="#prices" class="hover:text-brand-primary transition">Plans</a>
+                <a href="#amenities" class="hover:text-brand-primary transition">Amenities</a>
+                <a href="#gallery" class="hover:text-brand-primary transition">Gallery</a>
+                <a href="#location" class="hover:text-brand-primary transition">Location</a>
+            </div>
+
+            <!-- Call Button and Mobile Toggle Container -->
+            <div class="flex items-center space-x-4">
+                <a href="" class="bg-brand-primary text-white px-4 py-2 rounded-sm font-bold text-xs md:text-sm hover:bg-brand-hover transition duration-300 shadow-md uppercase tracking-wide flex items-center gap-2">
+                     <i class="fa-solid fa-phone md:hidden"></i>
+                     <span class="hidden md:inline">+91 8377955050</span>
+                     <span class="md:hidden">Call</span>
+                </a>
+                
+                <!-- Mobile Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-2xl text-brand-dark focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
+            <a href="#overview" class="block py-4 px-6 hover:bg-gray-50 border-b">Overview</a>
+            <a href="#prices" class="block py-4 px-6 hover:bg-gray-50 border-b">Plans & Price</a>
+            <a href="#amenities" class="block py-4 px-6 hover:bg-gray-50 border-b">Amenities</a>
+            <a href="#gallery" class="block py-4 px-6 hover:bg-gray-50 border-b">Gallery</a>
+            <a href="#location" class="block py-4 px-6 hover:bg-gray-50">Location</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-hero-pattern bg-cover bg-center bg-fixed min-h-[calc(100vh-80px)] flex items-center pt-10 pb-12" id="home">
+        <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+            
+            <!-- Text Content -->
+            <div class="text-white space-y-8 animate-fade-in-up">
+              <div class="border-l-4 border-brand-primary pl-4">
+                    <p class="text-brand-primary font-bold uppercase tracking-widest text-sm mb-2 drop-shadow-md text-boost-shadow">Pre-Launch Opportunity</p>
+                    <h1 class="text-5xl md:text-7xl font-serif font-bold leading-none mb-4 shadow-black">
+                        Curated Kid  <br> Centric Residences
+                    </h1>
+                </div>
+                
+                <p class="text-lg text-gray-200 font-light max-w-xl">
+                    Discover ultra-luxury 2, 3 & 4 BHK residences. Experience a lifestyle curated for the elite.
+                </p>
+                
+                <!-- Offers Badge -->
+                <div class="flex flex-wrap gap-4 mt-8">
+                    <div class="bg-white/10 backdrop-blur-sm border border-brand-primary/50 px-6 py-3 rounded-sm">
+                        
+                        <span class="font-bold">Confirmed Allotment</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm border border-brand-primary/50 px-6 py-3 rounded-sm">
+                        
+                        <span class="font-bold">₹ 2.60 Onwards</span>
+                    </div>
+              </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button onclick="openEnquireModal('Download Brochure')" class="bg-brand-primary text-white px-8 py-3 rounded-sm font-bold hover:bg-brand-hover transition duration-300 w-full md:w-auto shadow-lg">
+                        Download Brochure
+                    </button>
+                    <button onclick="openEnquireModal('View Plans')" class="border border-white text-white px-8 py-3 rounded-sm font-bold hover:bg-white hover:text-brand-dark transition duration-300 w-full md:w-auto">
+                        View Plans
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hero Lead Form -->
+            <div class="bg-white p-8 rounded shadow-2xl max-w-md ml-auto w-full relative border-t-4 border-brand-primary">
+                <h2 class="text-3xl font-serif font-bold text-brand-dark mb-1">Enquire Now</h2>
+                <p class="text-gray-500 mb-6 text-sm font-light">Register to avail exclusive launch offers.</p>
+                
+                <form onsubmit="handleForm(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Name</label>
+                        <input type="text" placeholder="Your Name" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Phone Number</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 border border-r-0 border-gray-200 bg-gray-100 text-gray-500 text-sm rounded-l">+91</span>
+                            <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-r focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Email</label>
+                        <input type="email" placeholder="E-mail" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-dark text-white font-bold py-4 rounded hover:bg-brand-primary transition duration-300 uppercase tracking-widest text-sm shadow-lg transform hover:-translate-y-1">
+                        Get Instant Callback
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Overview -->
+    <section id="overview" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="order-2 md:order-1 relative group">
+                    <!-- Red Squares Decoration -->
+                    <div class="absolute -top-4 -left-4 w-24 h-24 border-t-4 border-l-4 border-brand-primary z-0"></div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b-4 border-r-4 border-brand-primary z-0"></div>
+                    <!-- Image URL used here -->
+                    <img src="images/2.jpeg" alt="Luxury Interior" class="relative z-10 w-full shadow-2xl rounded-sm">
+                </div>
+                <div class="order-1 md:order-2">
+                    <h4 class="text-brand-primary font-bold uppercase tracking-widest text-xs mb-3">The Masterpiece</h4>
+                    <h2 class="text-5xl font-serif font-bold text-brand-dark mb-6">Designed for <br>The Connoisseurs</h2>
+                    <p class="text-gray-600 leading-relaxed mb-6 font-light">
+                    Ashiana Aaroham, Sector 80 Gurgaon, is a premium low-density community surrounded by lush greens, offering thoughtfully planned 3 &amp; 4 BHK homes. With kid-centric amenities and excellent connectivity to NH-8, it delivers a peaceful yet well-connected lifestyle in New Gurgaon.</p>
+                    
+                    <div class="grid grid-cols-2 gap-8 mt-8 border-t border-gray-200 pt-8">
+                        <div>
+                            <span class="text-4xl font-serif font-bold text-brand-dark block">10.8</span>
+                            <span class="text-sm text-gray-500 uppercase tracking-wide">Acres of Land</span>
+                      </div>
+                        <div>
+                            <span class="text-4xl font-serif font-bold text-brand-dark block">85%</span>
+                            <span class="text-sm text-gray-500 uppercase tracking-wide">Open Spaces</span>
+                        </div>
+                        <div>
+                            <span class="text-4xl font-serif font-bold text-brand-dark block">50+</span>
+                            <span class="text-sm text-gray-500 uppercase tracking-wide">Lifestyle Amenities</span>
+                        </div>
+                        <div>
+                            <span class="text-4xl font-serif font-bold text-brand-dark block">2027</span>
+                            <span class="text-sm text-gray-500 uppercase tracking-wide">Possession Date</span>
+                        </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plans & Prices -->
+    <section id="prices" class="py-24 bg-brand-accent">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-brand-primary font-bold uppercase tracking-widest text-xs">Selection</span>
+                <h2 class="text-5xl font-serif font-bold text-brand-dark mt-2">Plans & Pricing</h2>
+                <div class="w-24 h-1 bg-brand-primary mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Plan 1 -->
+                <div class="group bg-white border border-gray-100 rounded-lg p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gray-200 group-hover:bg-brand-primary transition-colors duration-300"></div>
+                    <h3 class="text-3xl font-serif font-bold text-brand-dark mb-2">3 BHK</h3>
+                    <p class="text-gray-500 text-sm mb-6">On Request </p>
+                    <div class="text-4xl font-serif font-bold text-brand-primary mb-8">₹ 2.60 Cr*<span class="text-lg text-gray-400 font-normal">*</span></div>
+                    
+                    <ul class="text-left space-y-3 mb-8 text-gray-600 text-sm border-t border-b border-gray-100 py-6">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-3"></i> East Facing Units</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-3"></i> 2 Master Suites</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-3"></i> Deck Balcony</li>
+                    </ul>
+                    <button onclick="openEnquireModal('2 BHK Inquiry')" class="w-full bg-brand-dark text-white py-3 rounded hover:bg-brand-primary transition duration-300 font-bold uppercase text-xs tracking-widest">Enquire Now</button>
+                </div>
+
+                <!-- Plan 2 (Red on Black usage area) -->
+                <div class="group bg-brand-dark border border-brand-dark rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform scale-105 z-10 text-center relative">
+                    <div class="absolute top-4 right-4 bg-brand-primary text-white text-xs font-bold px-2 py-1 rounded">MOST POPULAR</div>
+                    <h3 class="text-3xl font-serif font-bold text-white mb-2">3.5 BHK</h3>
+                    <p class="text-gray-400 text-sm mb-6">On Request</p>
+                    <div class="text-4xl font-serif font-bold text-brand-primary mb-8 text-boost-shadow">On Request<span class="text-lg text-gray-400 font-normal">*</span></div>
+                    
+                    <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm border-t border-b border-gray-700 py-6">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary text-boost-shadow mr-3"></i> Panoramic City Views</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary text-boost-shadow mr-3"></i> Servant Room</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary text-boost-shadow mr-3"></i> Large Living Deck</li>
+                    </ul>
+                    <button onclick="openEnquireModal('3 BHK Inquiry')" class="w-full bg-brand-primary text-white py-3 rounded hover:bg-white hover:text-brand-dark transition duration-300 font-bold uppercase text-xs tracking-widest">Enquire Now</button>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="group bg-white border border-gray-100 rounded-lg p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gray-200 group-hover:bg-brand-primary transition-colors duration-300"></div>
+                    <h3 class="text-3xl font-serif font-bold text-brand-dark mb-2">4 BHK</h3>
+                    <p class="text-gray-500 text-sm mb-6">On Request</p>
+                    <div class="text-4xl font-serif font-bold text-brand-primary mb-8">On Request<span class="text-lg text-gray-400 font-normal">*</span></div>
+                    
+                    <ul class="text-left space-y-3 mb-8 text-gray-600 text-sm border-t border-b border-gray-100 py-6">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-3"></i> Private Lift Lobby</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-3"></i> Home Automation</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-3"></i> Dual Balconies</li>
+                    </ul>
+                    <button onclick="openEnquireModal('4 BHK Inquiry')" class="w-full bg-brand-dark text-white py-3 rounded hover:bg-brand-primary transition duration-300 font-bold uppercase text-xs tracking-widest">Enquire Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities (Red on Black usage area) -->
+    <section id="amenities" class="py-24 bg-brand-dark text-white relative overflow-hidden">
+        <!-- Decorative bg elements - Red Glow -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary opacity-20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brand-primary opacity-10 rounded-full blur-3xl"></div>
+
+        <div class="text-center mb-16">
+                <!-- Text Group: max-w-xl mx-auto ensures the block itself is centered -->
+                <div class="max-w-xl mx-auto">
+                    <span class="text-brand-primary font-bold uppercase tracking-widest text-xs text-boost-shadow">Lifestyle</span>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mt-2">World-Class Amenities</h2>
+                </div>
+                <!-- Button now consistently centered below text -->
+                <button onclick="openEnquireModal('Download Amenities Brochure')" class="mt-6 mx-auto border border-brand-primary text-brand-primary px-8 py-3 rounded hover:bg-brand-primary hover:text-white transition uppercase text-xs font-bold tracking-widest">
+                    Download Amenities List
+                </button>
+            </div>
+
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-800 border border-gray-800">
+                <!-- Items -->
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-water-ladder text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Olympic Size Pool</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-dumbbell text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Sky Gym</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-spa text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Luxury Spa</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-champagne-glasses text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Banquet Hall</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-tree text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Zen Gardens</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-film text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Private Theatre</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-book-open text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Library Lounge</h5>
+                </div>
+                <div class="bg-brand-dark p-10 flex flex-col items-center justify-center text-center group hover:bg-gray-800 transition duration-500 cursor-pointer">
+                    <i class="fa-solid fa-child-reaching text-4xl text-brand-primary text-boost-shadow mb-4 group-hover:scale-110 transition duration-300"></i>
+                    <h5 class="text-lg font-serif tracking-wide">Kids Play Zone</h5>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section - NOW CLICKABLE -->
+    <section id="gallery" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-brand-primary font-bold uppercase tracking-widest text-xs">Visual Tour</span>
+                <h2 class="text-5xl font-serif font-bold text-brand-dark mt-2">The Gallery</h2>
+                <div class="w-24 h-1 bg-brand-primary mx-auto mt-6"></div>
+            </div>
+            
+            <div class="gallery-grid">
+                
+                <!-- Image 1: Club -->
+                <div class="gallery-item-1 relative group overflow-hidden rounded-sm cursor-pointer" onclick="openImageModal(this)">
+                    <img src="images/img_7.jpg" 
+                         data-full-url="images/img_7.jpg" 
+                         alt="Club" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <p class="text-white font-serif text-2xl font-bold">Club</p>
+                    </div>
+                </div>
+                
+                <!-- Image 2: Modular Kitchen -->
+                <div class="gallery-item-2 relative group overflow-hidden rounded-sm cursor-pointer" onclick="openImageModal(this)">
+                    <img src="images/img_2.jpg" 
+                         data-full-url="images/img_2.jpg" 
+                         alt="Modular Kitchen" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <p class="text-white font-serif text-2xl font-bold">Modular Kitchen</p>
+                    </div>
+                </div>
+
+                <!-- Image 3: Master Bedroom -->
+                <div class="gallery-item-3 relative group overflow-hidden rounded-sm cursor-pointer" onclick="openImageModal(this)">
+                    <img src="images/img_3.jpg"
+                         data-full-url="images/img_3.jpg"
+                         alt="Master Bedroom" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <p class="text-white font-serif text-2xl font-bold">Master Bedroom</p>
+                    </div>
+                </div>
+
+                <!-- Image 4: Play Area -->
+                <div class="gallery-item-4 relative group overflow-hidden rounded-sm cursor-pointer" onclick="openImageModal(this)">
+                    <img src="images/img_5.jpg"
+                         data-full-url="images/img_5.jpg"
+                         alt="Play Area" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <p class="text-white font-serif text-2xl font-bold">Play Area</p>
+                    </div>
+                </div>
+
+                 <!-- Image 6: Balcony View -->
+                 <div class="gallery-item-6 relative group overflow-hidden rounded-sm cursor-pointer" onclick="openImageModal(this)">
+                    <img src="images/img_1.jpg" 
+                         data-full-url="images/img_1.jpg" 
+                         alt="Balcony View" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <p class="text-white font-serif text-2xl font-bold">Balcony View</p>
+                    </div>
+                </div>
+
+                <!-- Image 7: Living Area -->
+                 <div class="gallery-item-6 relative group overflow-hidden rounded-sm cursor-pointer" onclick="openImageModal(this)">
+                    <img src="images/img_4.jpg" 
+                         data-full-url="images/img_4.jpg" 
+                         alt="Living Area" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <p class="text-white font-serif text-2xl font-bold">Living Area</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button onclick="openEnquireModal('View All Photos')" class="bg-transparent border border-brand-dark text-brand-dark px-10 py-3 rounded hover:bg-brand-dark hover:text-white transition duration-300 font-bold uppercase text-xs tracking-widest">
+                    View All Photos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Advantages -->
+    <section id="location" class="py-24 bg-brand-accent">
+        <div class="container mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16">
+                
+                <!-- Text / List -->
+                <div>
+                    <span class="text-brand-primary font-bold uppercase tracking-widest text-xs">Connectivity</span>
+                    <h2 class="text-5xl font-serif font-bold text-brand-dark mt-2 mb-8">Strategic Location</h2>
+                    <p class="text-gray-600 mb-10 font-light">
+                        Located near NH-8, Dwarka Expressway, and SPR, it ensures smooth connectivity to schools, hospitals, and business hubs. Positioned in a fast-growing Gurgaon corridor, it also promises strong future appreciation.
+                    </p>
+
+                    <div class="space-y-6 relative">
+                        <!-- Timeline Line -->
+                        <div class="absolute left-[27px] top-6 bottom-6 w-0.5 bg-brand-primary/30"></div>
+
+                        <!-- Item 1 -->
+                        <div class="relative flex items-center location-card group cursor-pointer">
+                            <div class="w-14 h-14 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center z-10 shadow-md group-hover:bg-brand-primary group-hover:text-white transition duration-300">
+                                <i class="fa-solid fa-plane text-brand-dark text-xl transition duration-300 group-hover:text-white"></i>
+                            </div>
+                            <div class="ml-6 bg-white p-4 rounded-lg shadow-sm flex-1 border border-transparent group-hover:border-brand-primary/30 transition duration-300">
+                                <h4 class="font-bold text-brand-dark">Indira Gandhi International Airport</h4>
+                                <p class="text-sm text-gray-500">20 Minutes Drive</p>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="relative flex items-center location-card group cursor-pointer">
+                            <div class="w-14 h-14 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center z-10 shadow-md group-hover:bg-brand-primary group-hover:text-white transition duration-300">
+                                <i class="fa-solid fa-briefcase text-brand-dark text-xl transition duration-300 group-hover:text-white"></i>
+                            </div>
+                             <div class="ml-6 bg-white p-4 rounded-lg shadow-sm flex-1 border border-transparent group-hover:border-brand-primary/30 transition duration-300">
+                                <h4 class="font-bold text-brand-dark">DDA Golf Course</h4>
+                                <p class="text-sm text-gray-500">10 Minutes Drive</p>
+                            </div>
+                        </div>
+
+                         <!-- Item 3 -->
+                         <div class="relative flex items-center location-card group cursor-pointer">
+                            <div class="w-14 h-14 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center z-10 shadow-md group-hover:bg-brand-primary group-hover:text-white transition duration-300">
+                                <i class="fa-solid fa-graduation-cap text-brand-dark text-xl transition duration-300 group-hover:text-white"></i>
+                            </div>
+                             <div class="ml-6 bg-white p-4 rounded-lg shadow-sm flex-1 border border-transparent group-hover:border-brand-primary/30 transition duration-300">
+                                <h4 class="font-bold text-brand-dark">National Law University</h4>
+                                <p class="text-sm text-gray-500">20 Minutes Drive</p>
+                            </div>
+                        </div>
+
+                         <!-- Item 4 -->
+                         <div class="relative flex items-center location-card group cursor-pointer">
+                            <div class="w-14 h-14 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center z-10 shadow-md group-hover:bg-brand-primary group-hover:text-white transition duration-300">
+                                <i class="fa-solid fa-cart-shopping text-brand-dark text-xl transition duration-300 group-hover:text-white"></i>
+                            </div>
+                             <div class="ml-6 bg-white p-4 rounded-lg shadow-sm flex-1 border border-transparent group-hover:border-brand-primary/30 transition duration-300">
+                                <h4 class="font-bold text-brand-dark">Luxury Mall & Multiplex</h4>
+                                <p class="text-sm text-gray-500">10 Minutes Drive</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <div class="h-full min-h-[400px] bg-white p-2 rounded shadow-xl transform rotate-1 hover:rotate-0 transition duration-500">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224568.47635462906!2d76.82526769385703!3d28.42280384487054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x29d32d86a15a7203%3A0x221ae29e55c5ec0e!2sAshiana%20Aaroham%20Sector%2080!5e0!3m2!1sen!2sin!4v1764415563539!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="rounded filter grayscale hover:grayscale-0 transition duration-500"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <!-- Footer --><footer class="bg-brand-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Adjusted from md:grid-cols-4 to md:grid-cols-3 -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-12 border-b border-gray-700 pb-12">
+
+                <!-- Column 1: Project -->
+                <div>
+                    <h5 class="text-lg font-serif font-bold mb-4 border-b-2 border-brand-primary pb-1 inline-block">Project</h5>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#overview" class="hover:text-white transition">Overview</a></li>
+                        <li><a href="#prices" class="hover:text-white transition">Plans & Pricing</a></li>
+                        <li><a href="#amenities" class="hover:text-white transition">Amenities</a></li>
+                        <li><a href="#gallery" class="hover:text-white transition">Gallery</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: Contact -->
+                <div>
+                    <h5 class="text-lg font-serif font-bold mb-4 border-b-2 border-brand-primary pb-1 inline-block">Contact</h5>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li class="flex items-start"><i class="fa-solid fa-phone mt-1 mr-3 text-brand-primary"></i> <a href="Phone Number" class="hover:text-white transition">+91 8377955050</a></li>
+                        <li class="flex items-start"><i class="fa-solid fa-envelope mt-1 mr-3 text-brand-primary"></i> <a href="mailto:info@skyline.com" class="hover:text-white transition">info@mg-realtors.in</a></li>
+                        <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 mr-3 text-brand-primary"></i> <span>Sector 80, Gurugram</span></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Disclaimer -->
+                <div>
+                    <h5 class="text-lg font-serif font-bold mb-4 border-b-2 border-brand-primary pb-1 inline-block">Disclaimer</h5>
+                    <p class="text-sm text-gray-400 font-light">
+                       This is not the official website of developer property, it belongs to authorised channel partners for information purposes only. All rights for logo & images are reserved to the developer. Thank you for visiting our website. This disclaimer ("Disclaimer") is applicable to this website and all microsites and websites owned by us. By using or accessing this website you agree with the Disclaimer without any qualification or limitation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-center pt-8 text-sm text-gray-500">
+                <p>&copy; 2025 M & G Realtors. All Rights Reserved.</p>
+                
+            </div>
+        </div>
+    </footer>
+
+    <!-- POPUP MODAL (General Enquiry) -->
+    <div id="enquireModal" class="modal hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden animate-fade-in-up">
+            <!-- Close Button -->
+            <button onclick="closeEnquireModal()" class="absolute top-4 right-4 text-gray-400 hover:text-brand-dark text-xl z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <!-- Modal Header -->
+            <div class="bg-brand-dark p-6 text-center">
+                <h3 class="text-2xl font-serif font-bold text-white mb-1">Enquire Now</h3>
+                <p class="text-brand-primary text-sm uppercase tracking-wide text-boost-shadow">Get Price Sheet & Brochure</p>
+            </div>
+
+            <!-- Modal Form -->
+            <div class="p-8">
+                <form onsubmit="handleForm(event)" class="space-y-4">
+                    <input type="hidden" id="sourceField" value="Popup">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Name</label>
+                        <input type="text" placeholder="Your Name" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:border-brand-dark focus:ring-1 focus:ring-brand-dark transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Phone Number</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 border border-r-0 border-gray-200 bg-gray-100 text-gray-500 text-sm rounded-l">+91</span>
+                            <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-r focus:outline-none focus:border-brand-dark focus:ring-1 focus:ring-brand-dark transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Email</label>
+                        <input type="email" placeholder="E-mail" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:border-brand-dark focus:ring-1 focus:ring-brand-dark transition">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-brand-primary text-white font-bold py-4 rounded hover:bg-brand-dark hover:text-white transition duration-300 uppercase tracking-widest text-sm">
+                        Submit Enquiry
+                    </button>
+                </form>
+                <p class="text-center text-xs text-gray-400 mt-4"><i class="fa-solid fa-lock mr-1"></i> Your details are safe with us.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMAGE MODAL (Click-to-Enlarge) -->
+    <div id="imageModal" class="modal hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4" onclick="closeImageModal()">
+        <div class="relative max-w-5xl w-full h-full flex items-center justify-center">
+            <!-- Close Button -->
+            <button class="absolute top-4 right-4 text-white text-3xl font-bold p-2 bg-black/50 rounded-full hover:bg-black/80 transition duration-150 z-20" aria-label="Close" onclick="closeImageModal()">
+                &times;
+            </button>
+            
+            <!-- Modal Image Container -->
+            <img id="modalImageContent" src="" alt="Enlarged Image" class="image-modal-content rounded-xl shadow-2xl transition-all duration-300" onclick="event.stopPropagation()">
+        </div>
+    </div>
+<!-- NEW: Modal for Automatic Pop-up on Load -->
+    <div id="auto-popup-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/95 hidden" onclick="closeAutoPopupModal(event)">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-lg relative border-t-4 border-brand-primary" onclick="event.stopPropagation()">
+            <button class="absolute top-4 right-4 text-gray-500 text-2xl hover:text-brand-primary transition focus:outline-none" onclick="closeAutoPopupModal(event)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-serif font-bold text-brand-dark mb-1">Limited Time Offer!</h2>
+                <p class="text-brand-primary font-bold text-lg">Register to avail exclusive launch offers.</p>
+                <p class="text-gray-500 text-sm font-light mt-2">Don't miss the exclusive pre-launch benefits.</p>
+            </div>
+            
+            <form id="auto-popup-form" onsubmit="handleAutoPopupForm(event)" class="space-y-4">
+                <input type="hidden" name="interest" value="Auto Pop-up Offer">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Name</label>
+                    <input type="text" name="name" placeholder="Your Name" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Phone Number</label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 border border-r-0 border-gray-200 bg-gray-100 text-gray-500 text-sm rounded-l">+91</span>
+                        <input type="tel" name="phone" placeholder="Phone Number" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-r focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-brand-primary text-white font-bold py-4 rounded hover:bg-brand-hover transition duration-300 uppercase tracking-widest text-sm shadow-lg">
+                    Claim Exclusive Offer
+                </button>
+            </form>
+            <div id="auto-popup-success-message" class="hidden mt-4 text-center text-green-500 font-bold">
+                Success! Your exclusive offer is reserved. A representative will call you.
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script>
+        // DOM Elements for Modals
+        const enquireModal = document.getElementById('enquireModal');
+        const sourceField = document.getElementById('sourceField');
+        const imageModal = document.getElementById('imageModal');
+        const modalImageContent = document.getElementById('modalImageContent');
+
+        // General Enquiry Modal Functions (renamed to avoid conflict)
+        function openEnquireModal(source = 'General Enquiry') {
+            enquireModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+            sourceField.value = source;
+        }
+
+        function closeEnquireModal() {
+            enquireModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Image Click Modal Functions
+        function openImageModal(imageContainer) {
+            // Find the image element inside the clicked container
+            const imageElement = imageContainer.querySelector('img');
+            const fullUrl = imageElement.getAttribute('data-full-url');
+            
+            modalImageContent.src = fullUrl;
+            imageModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeImageModal() {
+            imageModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            modalImageContent.src = ''; // Clear source
+        }
+
+        // Close any modal when clicking outside
+        enquireModal.addEventListener('click', (e) => {
+            if (e.target === enquireModal) {
+                closeEnquireModal();
+            }
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Sticky Navbar effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+
+        // Form Handling
+        function handleForm(e) {
+            e.preventDefault();
+            const formBtn = e.target.querySelector('button');
+            const originalText = formBtn.innerText;
+            
+            formBtn.innerText = 'Sending...';
+            formBtn.disabled = true;
+            formBtn.classList.add('opacity-75');
+            
+            setTimeout(() => {
+                console.log('Form Submitted: ', e.target.id); 
+
+                e.target.reset();
+                formBtn.innerText = originalText;
+                formBtn.disabled = false;
+                formBtn.classList.remove('opacity-75');
+                
+                // Close the appropriate modal
+                if (!enquireModal.classList.contains('hidden')) {
+                    closeEnquireModal(); 
+                }
+            }, 1500);
+        }
+
+        // Keyboard Listener (Escape key closes any open modal)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!imageModal.classList.contains('hidden')) {
+                    closeImageModal();
+                } else if (!enquireModal.classList.contains('hidden')) {
+                    closeEnquireModal();
+                }
+            }
+        });
+
+    </script>
+	<script src="auto-popup-script.js"></script>
+</body>
+</html>
